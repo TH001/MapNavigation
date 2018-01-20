@@ -7,6 +7,10 @@
 
 package mapnavigation;
 
+/**
+ * @author Tom
+ *
+ */
 public class mainprogram {
 
 	
