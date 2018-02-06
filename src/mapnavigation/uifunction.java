@@ -19,7 +19,23 @@ import java.awt.Font;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
+//import java.io.*;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.FilterOutputStream;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.PrintStream;
+import java.nio.file.Files;
+
 import javax.swing.JSpinner;
+import javax.swing.JFormattedTextField;
+import javax.swing.JProgressBar;
+import javax.swing.JCheckBox;
+import javax.swing.border.LineBorder;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class uifunction extends JFrame {
 
@@ -30,16 +46,31 @@ public class uifunction extends JFrame {
 	private JPanel contentPane;
 	private JTextField Inputname;
 	private JTextField Outputname;
-	private JPasswordField StartX;
+	private JFormattedTextField startX;
+	private JFormattedTextField startY;
+	private JFormattedTextField targetY;
+	private JFormattedTextField targetX;
 	
 	int xx,xy;
-	private JPasswordField StartY;
-	private JPasswordField TargetY;
-	private JPasswordField TargetX;
+	
+	int checkedInput;
 
 	/**
 	 * Launch the application.
 	 */
+	public void unstaticmain(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					uifunction frame = new uifunction();
+					frame.setUndecorated(true);
+					frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -64,16 +95,15 @@ public class uifunction extends JFrame {
 	public uifunction() {
 		setBackground(Color.WHITE);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 729, 476);
+		setBounds(100, 100, 730*3/2, 480*3/2);
 		contentPane = new JPanel();
 		contentPane.setBackground(Color.WHITE);
-		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
 		JPanel panel = new JPanel();
 		panel.setBackground(Color.DARK_GRAY);
-		panel.setBounds(0, 0, 346, 490);
+		panel.setBounds(0, 0, 346, 480);
 		contentPane.add(panel);
 		panel.setLayout(null);
 		
@@ -108,42 +138,41 @@ public class uifunction extends JFrame {
 		label.setIcon(new ImageIcon(Example.class.getResource("/designe/imgsource/picture1.jpg")));
 		panel.add(label);
 		
-		JLabel lblWeGotYou = new JLabel("Status: ...We got you...");
-		lblWeGotYou.setHorizontalAlignment(SwingConstants.CENTER);
-		lblWeGotYou.setForeground(new Color(240, 248, 255));
-		lblWeGotYou.setFont(new Font("Tahoma", Font.PLAIN, 13));
-		lblWeGotYou.setBounds(111, 343, 141, 27);
-		panel.add(lblWeGotYou);
+		JLabel Status = new JLabel("Status:");
+		Status.setHorizontalAlignment(SwingConstants.CENTER);
+		Status.setForeground(new Color(240, 248, 255));
+		Status.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		Status.setBounds(80, 343, 54, 27);
+		panel.add(Status);
 		
-		Button button = new Button("Run Waycalc");
-		button.setForeground(Color.WHITE);
-		button.setBackground(new Color(241, 57, 83));
-		button.setBounds(395, 363, 283, 36);
-		contentPane.add(button);
+		JProgressBar progressBar = new JProgressBar();
+		progressBar.setStringPainted(true);
+		progressBar.setValue(75);
+		progressBar.setForeground(Color.BLUE);
+//		progressBar.setBackground(Color.GRAY);
+		progressBar.setBounds(17, 399, 312, 14);
+		panel.add(progressBar);
 		
-		Inputname = new JTextField();
-		Inputname.setToolTipText("exect name of the input Map\r\nHas to be stored at the root-MapNavigation-folder");
-		Inputname.setBounds(395, 83, 283, 36);
-		contentPane.add(Inputname);
-		Inputname.setColumns(10);
+		JProgressBar progressBar_aktiv = new JProgressBar();
+		progressBar_aktiv.setStringPainted(true);
+		progressBar_aktiv.setValue(50);
+		progressBar_aktiv.setForeground(Color.GREEN);
+//		progressBar_aktiv.setBackground(Color.GRAY);
+		progressBar_aktiv.setBounds(17, 383, 312, 10);
+		panel.add(progressBar_aktiv);
 		
-		JLabel lblUsername = new JLabel("Input Karte");
-		lblUsername.setBounds(395, 58, 114, 18);
-		contentPane.add(lblUsername);
+		JLabel StatusMessage = new JLabel("...We got you...");
+		StatusMessage.setHorizontalAlignment(SwingConstants.LEFT);
+		StatusMessage.setForeground(new Color(240, 248, 255));
+		StatusMessage.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		StatusMessage.setBounds(140, 343, 158, 27);
+		panel.add(StatusMessage);
 		
-		JLabel lblEmail = new JLabel("Output Karte");
-		lblEmail.setBounds(395, 132, 114, 18);
-		contentPane.add(lblEmail);
-		
-		Outputname = new JTextField();
-		Outputname.setToolTipText("Any not jused name .png");
-		Outputname.setColumns(10);
-		Outputname.setBounds(395, 157, 283, 36);
-		contentPane.add(Outputname);
-		
-		JLabel lblPassword = new JLabel("Startposition");
-		lblPassword.setBounds(395, 204, 133, 18);
-		contentPane.add(lblPassword);
+		Button Run = new Button("Run Waycalc");
+		Run.setForeground(Color.WHITE);
+		Run.setBackground(new Color(241, 57, 83));
+		Run.setBounds(395, 392, 283, 36);
+		contentPane.add(Run);
 		
 		JLabel lbl_close = new JLabel("X");
 		lbl_close.addMouseListener(new MouseAdapter() {
@@ -158,41 +187,269 @@ public class uifunction extends JFrame {
 		lbl_close.setFont(new Font("Tahoma", Font.PLAIN, 18));
 		lbl_close.setBounds(691, 0, 37, 27);
 		contentPane.add(lbl_close);
+
+		JLabel lbl_minimize = new JLabel("_");
+		lbl_minimize.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+//				this.frame.setState(Frame.ICONIFIED);//TODO change Wrong place
+			}
+		});
+		lbl_minimize.setHorizontalAlignment(SwingConstants.CENTER);
+		lbl_minimize.setForeground(new Color(241, 57, 83));
+		lbl_minimize.setFont(new Font("Tahoma", Font.BOLD, 18));
+		lbl_minimize.setBounds(665, 0, 37, 27);
+		contentPane.add(lbl_minimize);
 		
-		Button button_1 = new Button("Set Start");
-		button_1.setForeground(Color.WHITE);
-		button_1.setBackground(new Color(241, 57, 83));
-		button_1.setBounds(395, 321, 133, 36);
-		contentPane.add(button_1);
+		JLabel Input = new JLabel("Input Karte");
+		Input.setBounds(395, 58, 114, 18);
+		contentPane.add(Input);
 		
-		Button button_2 = new Button("Set Target");
-		button_2.setForeground(Color.WHITE);
-		button_2.setBackground(new Color(241, 57, 83));
-		button_2.setBounds(545, 321, 133, 36);
-		contentPane.add(button_2);
+//		JLabel inputfound = new JLabel("#");
+//		inputfound.setFont(new Font("Tahoma", Font.BOLD, 35));
+//		inputfound.setBackground(Color.BLUE);
+//		inputfound.setBounds(641, 83, 37, 36);
+//		contentPane.add(inputfound);
 		
-		StartX = new JPasswordField();
-		StartX.setToolTipText("X Coodinate");
-		StartX.setBounds(395, 232, 133, 36);
-		contentPane.add(StartX);
+		Inputname = new JTextField();
+		Inputname.setFont(new Font("Tahoma", Font.ITALIC, 16));
+		Inputname.setText("test4.png");
+		Inputname.setToolTipText("exect name of the input Map\r\nHas to be stored at the root-MapNavigation-folder");
+		Inputname.setBounds(395, 83, 188, 36);
+		contentPane.add(Inputname);
+		Inputname.setColumns(10);
 		
-		StartY = new JPasswordField();
-		StartY.setToolTipText("Y Coodinate");
-		StartY.setBounds(395, 279, 133, 36);
-		contentPane.add(StartY);
+		JLabel Output = new JLabel("Output Karte");
+		Output.setBounds(395, 132, 114, 18);
+		contentPane.add(Output);
 		
-		TargetX = new JPasswordField();
-		TargetX.setToolTipText("X Coodinate");
-		TargetX.setBounds(545, 232, 133, 36);
-		contentPane.add(TargetX);
+		Outputname = new JTextField();
+		Outputname.setFont(new Font("Tahoma", Font.ITALIC, 16));
+		Outputname.setText("output1.png");
+		Outputname.setToolTipText("Any not jused name .png");
+		Outputname.setColumns(10);
+		Outputname.setBounds(395, 157, 283, 36);
+		contentPane.add(Outputname);
 		
-		TargetY = new JPasswordField();
-		TargetY.setToolTipText("Y Coodinate");
-		TargetY.setBounds(545, 279, 133, 36);
-		contentPane.add(TargetY);
+		JPanel panel_1 = new JPanel();
+		panel_1.setBackground(new Color(245,245,245,190));
+		panel_1.setBounds(382, 212, 306, 162);
+		contentPane.add(panel_1);
+		panel_1.setLayout(null);
 		
-		JLabel lblTargetposition = new JLabel("Targetposition");
-		lblTargetposition.setBounds(545, 202, 133, 18);
-		contentPane.add(lblTargetposition);
+		JLabel Start = new JLabel("Startposition");
+		Start.setBounds(14, 4, 133, 18);
+		panel_1.add(Start);
+		
+		JLabel Ziel = new JLabel("Targetposition");
+		Ziel.setBounds(162, 4, 133, 18);
+		panel_1.add(Ziel);
+		
+		startX = new JFormattedTextField();
+		startX.setBounds(14, 29, 133, 36);
+		panel_1.add(startX);
+		startX.setText("2");
+		startX.setFont(new Font("Tahoma", Font.ITALIC, 16));
+		startX.setToolTipText("X Coodinate");
+		
+		startY = new JFormattedTextField();
+		startY.setBounds(14, 73, 133, 36);
+		panel_1.add(startY);
+		startY.setFont(new Font("Tahoma", Font.ITALIC, 16));
+		startY.setText("2");
+		startY.setToolTipText("Y Coodinate");
+		
+		targetX = new JFormattedTextField();
+		targetX.setBounds(162, 29, 133, 36);
+		panel_1.add(targetX);
+		targetX.setFont(new Font("Tahoma", Font.ITALIC, 16));
+		targetX.setText("14");
+		targetX.setToolTipText("X Coodinate");
+		
+		targetY = new JFormattedTextField();
+		targetY.setBounds(162, 73, 133, 36);
+		panel_1.add(targetY);
+		targetY.setFont(new Font("Tahoma", Font.ITALIC, 16));
+		targetY.setText("11");
+		targetY.setToolTipText("Y Coodinate");
+		
+		Button SetStart = new Button("Set Start");
+		SetStart.setBounds(14, 116, 133, 36);
+		panel_1.add(SetStart);
+		SetStart.setForeground(Color.WHITE);
+		SetStart.setBackground(Color.BLUE);
+		
+		Button SetTarget = new Button("Set Target");
+		SetTarget.setBounds(162, 116, 133, 36);
+		panel_1.add(SetTarget);
+		SetTarget.setForeground(Color.WHITE);
+		SetTarget.setBackground(Color.BLUE);
+		
+		Button checkbutton = new Button("load?");
+		checkbutton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				if(checkbutton.getLabel()=="load?") {
+					checkbutton.setLabel("checked");
+					checkbutton.setBackground(Color.GREEN);
+					checkedInput = 2;
+					System.out.println("changeto:" + checkedInput);
+					writetoFile();
+//					System.exit(1);
+				}
+				else {
+					checkbutton.setLabel("load?");		
+					checkbutton.setBackground(Color.DARK_GRAY);
+					checkedInput = 0;
+					System.out.println("changeto:" + checkedInput);
+					writetoFile();
+				}
+			}
+		});
+		checkbutton.setForeground(Color.WHITE);
+		checkbutton.setBackground(Color.DARK_GRAY);
+		checkbutton.setBounds(592, 82, 86, 36);
+		contentPane.add(checkbutton);
+		
+		JLabel background = new JLabel("");
+		background.setBounds(242, -42, 600, 600);
+		contentPane.add(background);
+		background.setVerticalAlignment(SwingConstants.TOP);
+		background.setIcon(new ImageIcon(uifunction.class.getResource("/designe/imgsource/LogoWaterprint.png")));
+	}
+	public void create() {
+		
+	}
+//	public int picturefound () {
+//		if(theirisapicturefound==1) {
+//			return 1;
+//		}
+//		else {
+//			return 0;
+//		}
+//	}
+	public void request() {
+		//add output to put in a map
+	}
+	public int getInputfound() {
+		System.out.println("checked:" + checkedInput);
+		
+		return checkedInput;
+		/*
+		if(checkedInput==true) {
+//			File file = new File(Inputname.getText());
+//				if(file.exists()) {
+					return true;
+//				}
+//				else {
+//					return false;
+//				}
+		}
+		else {
+			return false;
+		}*/
+	}
+	
+	//not more needed transver via transferbuffer.temp
+	public String getInputname() {
+		return Inputname.getText();
+	}
+	public String getOutputname() {
+		return Outputname.getText();
+	}
+	public int getStartX() {
+		return Integer.parseInt(startX.getText());
+	}
+	public int getStartY() {
+		return Integer.parseInt(startY.getText());
+	}
+	public int getTagetX() {
+		return Integer.parseInt(targetX.getText());
+	}
+	public int getTagetY() {
+		return Integer.parseInt(targetY.getText());
+	}
+	public void outputfinal() {
+		//give distance and way
+	}
+	int valuetotest1 = 0;
+	public int getdynamictest() {
+		valuetotest1++;
+		return valuetotest1;
+	}
+	
+	private int writingattempt = 0;
+	public void writetoFile() {
+		
+		try {
+			writingattempt++;
+			File transferbuffer = new File("transferbuffer.tmp");
+			FileWriter fileWriter = new FileWriter(transferbuffer);	//Textdatei leeren
+			fileWriter.write("");
+			fileWriter.close();
+			PrintStream fileStream = new PrintStream(transferbuffer);
+			fileStream.println(writingattempt);
+			fileStream.println(getInputfound());
+			fileStream.println(getInputname());
+			fileStream.println(getStartX());
+			fileStream.println(getStartY());
+			fileStream.println(getTagetX());
+			fileStream.println(getTagetY());
+			fileStream.print(getOutputname());
+			fileStream.flush();
+			fileStream.close();
+//			fileWriter.write(fileStream);
+//			fileWriter.flush();
+//			fileWriter.close();
+//			File.createTempFile("transferbuffer", ".temp");
+//			Files.write(transferbuffer.temp, 1, checkedInput);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+//		readfromFile();
+	}
+	private String [] fileOutput = new String[9];
+	private void readfromFile() {
+		String line;
+	    try {
+	    	File transferbuffer = new File("transferbuffer.tmp");
+			// Creates a FileReader Object
+			FileReader filereader = new FileReader(transferbuffer); 
+	        BufferedReader bufferreader = new BufferedReader(filereader);
+	        line = bufferreader.readLine();
+
+	        for (int i = 0; line != null; i++) {
+	        	fileOutput[i] = line;
+	        	line = bufferreader.readLine();
+			}
+//	        while (line != null) {     
+//	          //do whatever here 
+//	            line = bufferreader.readLine();
+//	        }
+	    } catch (IOException ex) {
+	        ex.printStackTrace();
+	    }
+	    
+	    //TESTOUTPUT
+//	    System.out.println("beginn");
+//	    for (int i = 0; i < fileOutput.length; i++) {
+//			System.out.println(fileOutput[i]);
+//		}
+//	    System.out.println("end");
+	}
+	private void readfromFiletooutput() {
+		try {
+			File transferbuffer = new File("transferbuffer.temp");
+			// Creates a FileReader Object
+			FileReader filereader = new FileReader(transferbuffer); 
+		    char [] a = new char[50];
+		    filereader.read(a);   // reads the content to the array
+		    for(char c : a)
+		    System.out.print(c);   // prints the characters one by one
+		    filereader.close();
+		} catch (IOException e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
 	}
 }

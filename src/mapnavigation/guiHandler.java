@@ -1,27 +1,27 @@
-/*
- * Name			: main.java
+/**
+ * Name			: guiHandler.java
  * Author		: Tom
- * Created on	: 17.12.2017
+ * Created on	: 04.02.2018
  * Description	: empty
  */
-
 package mapnavigation;
 
+public class guiHandler {
 
-public class ui {
-//	static ui UI = new ui();
+	public guiHandler() {
+		// TODO Auto-generated constructor stub
+	}
+
+////private Variables////////////////////////
 	private int theirisapicturefound = 1;
 	private int startX = 2;			//counting from (0)-(pixelwide-1)
 	private int startY = 2;			//counting from (0)-(pixelheight-1)
 	private int tagetX = 14;
 	private int tagetY = 11;
+	private String inputname = "test4.png";
+	private String outputname = "output2.png";
 	
-	public String inputname = "test4.png";
-	public String outputname = "output2.png";
-	
-	public ui() {
-		// TODO Auto-generated constructor stub
-	}
+////public Methods belonging main////////////
 	public void create() {
 		
 	}
@@ -37,7 +37,6 @@ public class ui {
 		//add output to put in a map
 //		System.out.println("LOOP REQUEST");
 	}
-	
 	public void outputfinal() {
 		//give distance and way
 	}
@@ -53,5 +52,12 @@ public class ui {
 	public int getTagetY() {
 		return tagetY;
 	}
+	public String getInputName() {
+		return inputname;
+	}
+	public String getOutputName() {
+		return outputname;
+	}
 
+////public Methods belonging sub/////////////
 }
