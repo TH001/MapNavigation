@@ -36,6 +36,10 @@ import javax.swing.JCheckBox;
 import javax.swing.border.LineBorder;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
+
+
 
 public class uifunction extends JFrame {
 
@@ -54,6 +58,9 @@ public class uifunction extends JFrame {
 	int xx,xy;
 	
 	int checkedInput;
+	
+	private int activeprogressbarvalue=75;
+	private int progressbarvalue=50;
 
 	/**
 	 * Launch the application.
@@ -87,7 +94,6 @@ public class uifunction extends JFrame {
 	
 	
 	// going to borrow code from a gist to move frame.
-	
 
 	/**
 	 * Create the frame.
@@ -147,7 +153,7 @@ public class uifunction extends JFrame {
 		
 		JProgressBar progressBar = new JProgressBar();
 		progressBar.setStringPainted(true);
-		progressBar.setValue(75);
+		progressBar.setValue(progressbarvalue);
 		progressBar.setForeground(Color.BLUE);
 //		progressBar.setBackground(Color.GRAY);
 		progressBar.setBounds(17, 399, 312, 14);
@@ -155,7 +161,7 @@ public class uifunction extends JFrame {
 		
 		JProgressBar progressBar_aktiv = new JProgressBar();
 		progressBar_aktiv.setStringPainted(true);
-		progressBar_aktiv.setValue(50);
+		progressBar_aktiv.setValue(activeprogressbarvalue);
 		progressBar_aktiv.setForeground(Color.GREEN);
 //		progressBar_aktiv.setBackground(Color.GRAY);
 		progressBar_aktiv.setBounds(17, 383, 312, 10);
@@ -169,6 +175,12 @@ public class uifunction extends JFrame {
 		panel.add(StatusMessage);
 		
 		Button Run = new Button("Run Waycalc");
+		Run.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+//				set Run=true;
+				writetoFile();
+			}
+		});
 		Run.setForeground(Color.WHITE);
 		Run.setBackground(new Color(241, 57, 83));
 		Run.setBounds(395, 392, 283, 36);
@@ -219,11 +231,92 @@ public class uifunction extends JFrame {
 		contentPane.add(Inputname);
 		Inputname.setColumns(10);
 		
+		Button checkbutton = new Button("load?");
+		checkbutton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				if(checkbutton.getLabel()=="load?") {
+					File picture = new File(Inputname.getText());
+					if(picture.exists()) {
+						checkbutton.setLabel("checked");
+						checkbutton.setBackground(Color.GREEN);
+						checkbutton.setForeground(Color.DARK_GRAY);
+						checkedInput = 2;
+						System.out.println("changeto:" + checkedInput);
+						writetoFile();
+					}
+					else {
+						checkbutton.setLabel("not found");
+						checkbutton.setBackground(Color.ORANGE);
+						checkbutton.setForeground(Color.DARK_GRAY);
+						checkedInput = 1;
+						System.out.println("changeto:" + checkedInput);
+						writetoFile();
+					}
+//					System.exit(1);
+				}
+				else if(checkbutton.getLabel()=="not found") {
+					File picture = new File(Inputname.getText());
+					if(picture.exists()) {
+						checkbutton.setLabel("checked");
+						checkbutton.setBackground(Color.GREEN);
+						checkbutton.setForeground(Color.DARK_GRAY);
+						checkedInput = 2;
+						System.out.println("changeto:" + checkedInput);
+						writetoFile();
+					}
+					else {
+						checkbutton.setLabel("not found");
+						checkbutton.setBackground(Color.ORANGE);
+						checkbutton.setForeground(Color.DARK_GRAY);
+						checkedInput = 1;
+						System.out.println("changeto:" + checkedInput);
+					}
+				}
+				else {
+					File picture = new File(Inputname.getText());
+					if(picture.exists()) {
+//						checkbutton.setLabel("load?");		
+//						checkbutton.setBackground(Color.DARK_GRAY);
+//						checkbutton.setForeground(Color.WHITE);
+//						checkedInput = 0;
+						System.out.println("changeto:" + checkedInput);
+						writetoFile();
+					}
+					else {
+						checkbutton.setLabel("not found");
+						checkbutton.setBackground(Color.ORANGE);
+						checkbutton.setForeground(Color.DARK_GRAY);
+						checkedInput = 1;
+						System.out.println("changeto:" + checkedInput);
+						writetoFile();
+					}
+				}
+			}
+		});
+		checkbutton.setForeground(Color.WHITE);
+		checkbutton.setBackground(Color.DARK_GRAY);
+		checkbutton.setBounds(592, 82, 86, 36);
+		contentPane.add(checkbutton);
+		
 		JLabel Output = new JLabel("Output Karte");
 		Output.setBounds(395, 132, 114, 18);
 		contentPane.add(Output);
 		
 		Outputname = new JTextField();
+		Outputname.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusLost(FocusEvent arg0) {
+				File outputfile = new File(Outputname.getText());
+				if(outputfile.exists()) {
+					Outputname.setBackground(Color.YELLOW);
+					Outputname.setToolTipText("this name is already used try any other .png");
+				}
+				else {
+					Outputname.setBackground(Color.WHITE);
+					Outputname.setToolTipText("Any not jused name .png");
+				}
+			}
+		});
 		Outputname.setFont(new Font("Tahoma", Font.ITALIC, 16));
 		Outputname.setText("output1.png");
 		Outputname.setToolTipText("Any not jused name .png");
@@ -246,6 +339,18 @@ public class uifunction extends JFrame {
 		panel_1.add(Ziel);
 		
 		startX = new JFormattedTextField();
+		startX.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusLost(FocusEvent e) {
+				startX.setText(startX.getText().replaceAll("\\D+",""));
+				if(0>Integer.parseInt(startX.getText())||Integer.parseInt(startX.getText())>1/*pixelX*/) {
+					startX.setBackground(Color.ORANGE);
+				}
+				else {
+					startX.setBackground(Color.WHITE);
+				}
+			}
+		});
 		startX.setBounds(14, 29, 133, 36);
 		panel_1.add(startX);
 		startX.setText("2");
@@ -253,6 +358,18 @@ public class uifunction extends JFrame {
 		startX.setToolTipText("X Coodinate");
 		
 		startY = new JFormattedTextField();
+		startY.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusLost(FocusEvent e) {
+				startY.setText(startY.getText().replaceAll("\\D+",""));
+				if(0>Integer.parseInt(startY.getText())||Integer.parseInt(startY.getText())>1/*pixelY*/) {
+					startY.setBackground(Color.ORANGE);
+				}
+				else {
+					startY.setBackground(Color.WHITE);
+				}
+			}
+		});
 		startY.setBounds(14, 73, 133, 36);
 		panel_1.add(startY);
 		startY.setFont(new Font("Tahoma", Font.ITALIC, 16));
@@ -260,6 +377,18 @@ public class uifunction extends JFrame {
 		startY.setToolTipText("Y Coodinate");
 		
 		targetX = new JFormattedTextField();
+		targetX.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusLost(FocusEvent e) {
+				targetX.setText(targetX.getText().replaceAll("\\D+",""));
+				if(0>Integer.parseInt(targetX.getText())||Integer.parseInt(targetX.getText())>1/*pixelX*/) {
+					targetX.setBackground(Color.ORANGE);
+				}
+				else {
+					targetX.setBackground(Color.WHITE);
+				}
+			}
+		});
 		targetX.setBounds(162, 29, 133, 36);
 		panel_1.add(targetX);
 		targetX.setFont(new Font("Tahoma", Font.ITALIC, 16));
@@ -267,6 +396,18 @@ public class uifunction extends JFrame {
 		targetX.setToolTipText("X Coodinate");
 		
 		targetY = new JFormattedTextField();
+		targetY.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusLost(FocusEvent e) {
+				targetY.setText(targetY.getText().replaceAll("\\D+",""));
+				if(0>Integer.parseInt(targetY.getText())||Integer.parseInt(targetY.getText())>1/*pixelY*/) {
+					targetY.setBackground(Color.ORANGE);
+				}
+				else {
+					targetY.setBackground(Color.WHITE);
+				}
+			}
+		});
 		targetY.setBounds(162, 73, 133, 36);
 		panel_1.add(targetY);
 		targetY.setFont(new Font("Tahoma", Font.ITALIC, 16));
@@ -274,41 +415,29 @@ public class uifunction extends JFrame {
 		targetY.setToolTipText("Y Coodinate");
 		
 		Button SetStart = new Button("Set Start");
+		SetStart.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+//				habe Start=true;
+				writetoFile();
+			}
+		});
 		SetStart.setBounds(14, 116, 133, 36);
 		panel_1.add(SetStart);
 		SetStart.setForeground(Color.WHITE);
 		SetStart.setBackground(Color.BLUE);
 		
 		Button SetTarget = new Button("Set Target");
+		SetTarget.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+//				habe Ziel=true;
+				writetoFile();
+			}
+		});
 		SetTarget.setBounds(162, 116, 133, 36);
 		panel_1.add(SetTarget);
 		SetTarget.setForeground(Color.WHITE);
 		SetTarget.setBackground(Color.BLUE);
 		
-		Button checkbutton = new Button("load?");
-		checkbutton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				if(checkbutton.getLabel()=="load?") {
-					checkbutton.setLabel("checked");
-					checkbutton.setBackground(Color.GREEN);
-					checkedInput = 2;
-					System.out.println("changeto:" + checkedInput);
-					writetoFile();
-//					System.exit(1);
-				}
-				else {
-					checkbutton.setLabel("load?");		
-					checkbutton.setBackground(Color.DARK_GRAY);
-					checkedInput = 0;
-					System.out.println("changeto:" + checkedInput);
-					writetoFile();
-				}
-			}
-		});
-		checkbutton.setForeground(Color.WHITE);
-		checkbutton.setBackground(Color.DARK_GRAY);
-		checkbutton.setBounds(592, 82, 86, 36);
-		contentPane.add(checkbutton);
 		
 		JLabel background = new JLabel("");
 		background.setBounds(242, -42, 600, 600);
@@ -316,6 +445,7 @@ public class uifunction extends JFrame {
 		background.setVerticalAlignment(SwingConstants.TOP);
 		background.setIcon(new ImageIcon(uifunction.class.getResource("/designe/imgsource/LogoWaterprint.png")));
 	}
+	
 	public void create() {
 		
 	}
@@ -375,6 +505,11 @@ public class uifunction extends JFrame {
 	public int getdynamictest() {
 		valuetotest1++;
 		return valuetotest1;
+	}
+	
+	public void setStatus(String statusmessage, int activepersentage, int persentage) {
+		progressbarvalue=persentage;
+		activeprogressbarvalue=activepersentage;
 	}
 	
 	private int writingattempt = 0;
@@ -452,4 +587,98 @@ public class uifunction extends JFrame {
 			e.printStackTrace();
 		}
 	}
+
+//	public void inputwindow() {
+//		JFrame inputnamewindow = new JFrame();
+//		inputnamewindow.setUndecorated(true);
+//		inputnamewindow.setVisible(true);
+//		inputnamewindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//		inputnamewindow.setBackground(Color.WHITE);
+//		inputnamewindow.setBounds(100, 100, 480, 200);
+//		
+//		JLabel Input = new JLabel("Input Karte");
+//		Input.setBounds(0, 0, 114, 18);
+//		inputnamewindow.add(Input);
+//		
+//		Inputname = new JTextField();
+//		Inputname.setFont(new Font("Tahoma", Font.ITALIC, 16));
+//		Inputname.setText("test4.png");
+//		Inputname.setToolTipText("exect name of the input Map\r\nHas to be stored at the root-MapNavigation-folder");
+//		Inputname.setBounds(0, 10, 40, 10);
+//		inputnamewindow.add(Inputname);
+//		Inputname.setColumns(10);
+//		
+//		Button checkbutton = new Button("load?");
+//		checkbutton.addActionListener(new ActionListener() {
+//			public void actionPerformed(ActionEvent arg0) {
+//				if(checkbutton.getLabel()=="load?") {
+//					File picture = new File(Inputname.getText());
+//					if(picture.exists()) {
+//						checkbutton.setLabel("checked");
+//						checkbutton.setBackground(Color.GREEN);
+//						checkbutton.setForeground(Color.DARK_GRAY);
+//						checkedInput = 2;
+//						System.out.println("changeto:" + checkedInput);
+//						writetoFile();
+//					}
+//					else {
+//						checkbutton.setLabel("not found");
+//						checkbutton.setBackground(Color.ORANGE);
+//						checkbutton.setForeground(Color.DARK_GRAY);
+//						checkedInput = 1;
+//						System.out.println("changeto:" + checkedInput);
+//						writetoFile();
+//					}
+////					System.exit(1);
+//				}
+//				else if(checkbutton.getLabel()=="not found") {
+//					File picture = new File(Inputname.getText());
+//					if(picture.exists()) {
+//						checkbutton.setLabel("checked");
+//						checkbutton.setBackground(Color.GREEN);
+//						checkbutton.setForeground(Color.DARK_GRAY);
+//						checkedInput = 2;
+//						System.out.println("changeto:" + checkedInput);
+//						writetoFile();
+//					}
+//					else {
+//						checkbutton.setLabel("not found");
+//						checkbutton.setBackground(Color.ORANGE);
+//						checkbutton.setForeground(Color.DARK_GRAY);
+//						checkedInput = 1;
+//						System.out.println("changeto:" + checkedInput);
+//					}
+//				}
+//				else {
+//					File picture = new File(Inputname.getText());
+//					if(picture.exists()) {
+////						checkbutton.setLabel("load?");		
+////						checkbutton.setBackground(Color.DARK_GRAY);
+////						checkbutton.setForeground(Color.WHITE);
+////						checkedInput = 0;
+//						System.out.println("changeto:" + checkedInput);
+//						writetoFile();
+//					}
+//					else {
+//						checkbutton.setLabel("not found");
+//						checkbutton.setBackground(Color.ORANGE);
+//						checkbutton.setForeground(Color.DARK_GRAY);
+//						checkedInput = 1;
+//						System.out.println("changeto:" + checkedInput);
+//						writetoFile();
+//					}
+//				}
+//			}
+//		});
+//		checkbutton.setForeground(Color.WHITE);
+//		checkbutton.setBackground(Color.DARK_GRAY);
+//		checkbutton.setBounds(50, 10, 86, 36);
+//		inputnamewindow.add(checkbutton);
+//		
+//		JLabel background = new JLabel("");
+//		background.setBounds(20, -42, 100, 100);
+//		inputnamewindow.add(background);
+//		background.setVerticalAlignment(SwingConstants.TOP);
+//		background.setIcon(new ImageIcon(uifunction.class.getResource("/designe/imgsource/LogoWaterprint.png")));
+//	}
 }

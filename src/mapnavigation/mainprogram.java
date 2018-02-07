@@ -80,13 +80,36 @@ public class mainprogram {
 	void run(){	
 		gui.unstaticmain(null);
 		gui.writetoFile();
-//		workingcore.getGui().unstaticmain(null);
-//		if(gui.getdynamictest()<20) {		//auf Bild als input warten
-//			do {
-//				gui.request();
-//				System.out.println("testvalue:" + gui.getdynamictest());
-//			}while(gui.getdynamictest()<20);//TODO ist das richtig?
+//		while(test==1) {
+//			if(inputfound<2) {
+//				do {
+//					File transferbuffer = new File("transferbuffer.tmp");
+//				      if(transferbuffer.exists()){
+//				    	  readfromFile();
+//				      }
+//				}while(inputfound<2);
+//				conv.readpicture(inputname);
+	//speudocode
+//				gui.loadpicture();
+//				this.createmaps();
+//				if(start=set){
+//					this.setuplocation();
+//					if(berechnen=true){
+//						this.calcdistances();
+//						while(start gleich und Inputkarte gleich){
+//							if(ziel=set){
+//								this.markway();
+//								conv.writepicture(outputname,colormap);
+//								gui.outputfinal();
+//								gui.request new name for new output;
+//							}
+//						}
+//					}
+//				}
+//			}
 //		}
+		
+	//richtiger alter funktionierender code
 		if(inputfound<2) {		//auf Bild als input warten
 			do {
 //				gui.request();
@@ -96,7 +119,7 @@ public class mainprogram {
 			    	  readfromFile();
 			      }
 //				System.out.println("reseved:" + gui.checkedInput);
-			}while(inputfound<2);//TODO ist das richtig?
+			}while(inputfound<2);//TO DO ist das richtig?
 		}
 		System.out.println("readingpicture...");
 		conv.readpicture(inputname);
@@ -119,6 +142,13 @@ public class mainprogram {
 		this.output("lasthopmap");//testing
 		this.output("colormap");//testing
 	}
+	
+//	if(gui.getdynamictest()<20) {		//auf Bild als input warten
+//	do {
+//		gui.request();
+//		System.out.println("testvalue:" + gui.getdynamictest());
+//	}while(gui.getdynamictest()<20);//TODO ist das richtig?
+//}
 	
 ////Methods/////////////////////////////////////////
 	
@@ -521,7 +551,7 @@ public class mainprogram {
 	        line = bufferreader.readLine();
 
 	        for (int i = 0; line != null; i++) {
-	        	if(i == 0)if(Integer.parseInt(line) == writingattempt)return;	//no change no date read again
+//	        	if(i == 0)if(Integer.parseInt(line) == writingattempt)return;	//no change no date read again
 	        	fileOutput[i] = line;
 	        	line = bufferreader.readLine();
 			}
@@ -552,7 +582,7 @@ public class mainprogram {
 		tagetY= Integer.parseInt(fileOutput[6]);
 		outputname= fileOutput[7];
 		
-//		File transferbuffer = new File("transferbuffer.tmp");
-//		transferbuffer.delete();
+		File transferbuffer = new File("transferbuffer.tmp");
+		transferbuffer.delete();
 	}
 }
