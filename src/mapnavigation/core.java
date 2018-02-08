@@ -30,6 +30,7 @@ public class core {
 	}
 	
 	public void run() throws Exception {
+		System.out.println("Point0");
 		programm.run();
 //		ui1.create();					//User Interface erstellen
 	}

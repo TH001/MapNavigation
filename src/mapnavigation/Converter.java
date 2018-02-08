@@ -122,4 +122,8 @@ public class converter {
 			System.out.println("Error: " + e);
 		}
 	}
+	
+	public String getInputname() {
+		return inputfile.getName();
+	}
 }

@@ -177,7 +177,9 @@ public class uifunction extends JFrame {
 		Button Run = new Button("Run Waycalc");
 		Run.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-//				set Run=true;
+				if(calcingactive == 0) {
+					calcingactive = 1;
+				}
 				writetoFile();
 			}
 		});
@@ -190,7 +192,8 @@ public class uifunction extends JFrame {
 		lbl_close.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-				
+				finallydone = 1;
+				writetoFile();
 				System.exit(0);
 			}
 		});
@@ -318,7 +321,7 @@ public class uifunction extends JFrame {
 			}
 		});
 		Outputname.setFont(new Font("Tahoma", Font.ITALIC, 16));
-		Outputname.setText("output1.png");
+		Outputname.setText(newoutputname);
 		Outputname.setToolTipText("Any not jused name .png");
 		Outputname.setColumns(10);
 		Outputname.setBounds(395, 157, 283, 36);
@@ -417,7 +420,10 @@ public class uifunction extends JFrame {
 		Button SetStart = new Button("Set Start");
 		SetStart.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-//				habe Start=true;
+				if(startset==0) {
+					startset = 1;
+					calcingactive = 0;
+				}
 				writetoFile();
 			}
 		});
@@ -429,7 +435,9 @@ public class uifunction extends JFrame {
 		Button SetTarget = new Button("Set Target");
 		SetTarget.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-//				habe Ziel=true;
+				if(targetset == 0) {
+					targetset = 1;
+				}
 				writetoFile();
 			}
 		});
@@ -478,6 +486,20 @@ public class uifunction extends JFrame {
 			return false;
 		}*/
 	}
+//	private int i = 0;
+	String newoutputname = "out.png";
+	public String generateNewOutputname() {
+		boolean newfound = false;
+		System.out.println("Test1");
+		for (int i = 0; newfound == false; i++) {
+			System.out.println("Test2: " + i);
+			File outputfile = new File(newoutputname);
+			newfound=outputfile.exists();
+			newoutputname="output"+ Integer.toString(i) + ".png";
+		}
+		System.out.println("Test3");
+		return newoutputname;
+	}
 	
 	//not more needed transver via transferbuffer.temp
 	public String getInputname() {
@@ -512,7 +534,33 @@ public class uifunction extends JFrame {
 		activeprogressbarvalue=activepersentage;
 	}
 	
+	public void reset(String variable/*, int value = 0*/) {
+		switch (variable) {
+			case "writingattempt":
+				writingattempt = 0;
+				writetoFile();
+			break;
+			case "startset":
+				startset = 0;
+				writetoFile();
+			break;
+			case "targetset":
+				targetset = 0;
+				System.out.println("reset targetset");
+				writetoFile();
+			break;
+			case "calcingactive":
+				calcingactive = 0;
+				writetoFile();
+			break;
+		}
+	}
+	
 	private int writingattempt = 0;
+	private int startset = 0;
+	private int targetset = 0;
+	private int calcingactive = 0;
+	private int finallydone = 0;
 	public void writetoFile() {
 		
 		try {
@@ -524,12 +572,16 @@ public class uifunction extends JFrame {
 			PrintStream fileStream = new PrintStream(transferbuffer);
 			fileStream.println(writingattempt);
 			fileStream.println(getInputfound());
+			fileStream.println(startset);//TODO add get
+			fileStream.println(targetset);
+			fileStream.println(calcingactive);//calcingon war auch nicht schlecht
 			fileStream.println(getInputname());
+			fileStream.println(getOutputname());
 			fileStream.println(getStartX());
 			fileStream.println(getStartY());
 			fileStream.println(getTagetX());
 			fileStream.println(getTagetY());
-			fileStream.print(getOutputname());
+			fileStream.print(finallydone);
 			fileStream.flush();
 			fileStream.close();
 //			fileWriter.write(fileStream);
@@ -543,7 +595,7 @@ public class uifunction extends JFrame {
 		}
 //		readfromFile();
 	}
-	private String [] fileOutput = new String[9];
+	private String [] fileOutput = new String[12];
 	private void readfromFile() {
 		String line;
 	    try {

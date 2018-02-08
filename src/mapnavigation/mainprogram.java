@@ -49,15 +49,21 @@ public class mainprogram {
 	int[][][] lasthopmap;
 	
 	private int writingattempt = 0;
-	private String [] fileOutput = new String[9];
+	private String [] fileOutput = new String[12];
 	private int inputfound = 0;
+	private int startset = 0;
+	private int targetset = 0;
+	private int calcingactiv = 0;
 	private String inputname;
+	private String outputname;
 	private int startX = -1;
 	private int startY = -1;
 	private int tagetX = -1;
 	private int tagetY = -1;
-	private String outputname;
+	private int finallydone = 0;
 	
+	private int memorystartX = -1;
+	private int memorystartY = -1;
 	
 ////Constructor//////////////////////////////////////
 	
@@ -77,38 +83,82 @@ public class mainprogram {
 //	}
 	
 	public int test = 1;
-	void run(){	
+	public void run(){	
+		System.out.println("Point1");
 		gui.unstaticmain(null);
+		System.out.println("Point1.2");
+		System.out.println(gui.generateNewOutputname());
+		System.out.println("Point1.3");
 		gui.writetoFile();
-//		while(test==1) {
-//			if(inputfound<2) {
-//				do {
-//					File transferbuffer = new File("transferbuffer.tmp");
-//				      if(transferbuffer.exists()){
-//				    	  readfromFile();
-//				      }
-//				}while(inputfound<2);
-//				conv.readpicture(inputname);
-	//speudocode
+		System.out.println("Point1.5");
+		while(finallydone!=1) {
+			System.out.println("Point2");
+			if(inputfound<2) {
+				System.out.println("Point3");
+				do {
+					File transferbuffer = new File("transferbuffer.tmp");
+				    if(transferbuffer.exists()){
+				    	  readfromFile();
+				    }
+				}while(inputfound<2);
+				conv.readpicture(inputname);
 //				gui.loadpicture();
-//				this.createmaps();
-//				if(start=set){
-//					this.setuplocation();
-//					if(berechnen=true){
-//						this.calcdistances();
-//						while(start gleich und Inputkarte gleich){
-//							if(ziel=set){
-//								this.markway();
-//								conv.writepicture(outputname,colormap);
-//								gui.outputfinal();
-//								gui.request new name for new output;
-//							}
-//						}
-//					}
-//				}
-//			}
-//		}
+				this.createmaps();
+				if(startset<1){
+					System.out.println("Point4");
+					do {
+						File transferbuffer = new File("transferbuffer.tmp");
+					    if(transferbuffer.exists()){
+					    	  readfromFile();
+					    }
+					}while(startset<1);
+					memorystartX=startX;
+					memorystartY=startY;
+					this.setuplocation();
+					if(calcingactiv<1){
+						System.out.println("Point5");
+						do {
+							File transferbuffer = new File("transferbuffer.tmp");
+						    if(transferbuffer.exists()){
+						    	  readfromFile();
+						    }
+						}while(calcingactiv<1);
+						System.out.println("Point5.5");
+						this.calcdistances();
+						System.out.println("Point5.75");
+						while(memorystartX == startX && memorystartY == startY){
+							System.out.println("Point6");
+							if(targetset<1){
+								System.out.println("Point7");
+								do {
+									File transferbuffer = new File("transferbuffer.tmp");
+								    if(transferbuffer.exists()){
+								    	  readfromFile();
+								    }
+								}while(targetset<1);
+								this.markway();
+								conv.writepicture(outputname,colormap);
+								gui.outputfinal();
+								gui.reset("targetset");
+								gui.generateNewOutputname();
+								this.cleancolormap();
+							}
+							gui.setStatus("optimal path found", 100, 100);
+							System.out.println("Point8");
+							File transferbuffer = new File("transferbuffer.tmp");
+						    if(transferbuffer.exists()){
+						    	readfromFile();
+						    }
+						}
+						finallydone=1;
+					}
+				}
+			}
+		}
+		System.out.println("finally done");
+	}
 		
+/*
 	//richtiger alter funktionierender code
 		if(inputfound<2) {		//auf Bild als input warten
 			do {
@@ -142,7 +192,8 @@ public class mainprogram {
 		this.output("lasthopmap");//testing
 		this.output("colormap");//testing
 	}
-	
+*/
+
 //	if(gui.getdynamictest()<20) {		//auf Bild als input warten
 //	do {
 //		gui.request();
@@ -189,6 +240,16 @@ public class mainprogram {
 		
 	}
 	//TODO wann brauch man this.XYZ
+	
+	private void cleancolormap() {
+		for (int i = 0; i < colormap.length; i++) {				//colormap komplett weiss färben
+			for (int j = 0; j < colormap[i].length; j++) {
+				if(colormap[i][j]==DEFINES.GREEN||colormap[i][j]==DEFINES.PURPLE) {
+					colormap[i][j]=DEFINES.YELLO;
+				}
+			}
+		}
+	}
 	
 	private void setuplocation() {
 		if(this.colormap[startX][startY]!=DEFINES.RED) {	//Startpunkt muss begehbar sein
@@ -575,12 +636,16 @@ public class mainprogram {
 	    
 		writingattempt = Integer.parseInt(fileOutput[0]);
 		inputfound = Integer.parseInt(fileOutput[1]);
-		inputname= fileOutput[2];
-		startX= Integer.parseInt(fileOutput[3]);
-		startY= Integer.parseInt(fileOutput[4]);
-		tagetX= Integer.parseInt(fileOutput[5]);
-		tagetY= Integer.parseInt(fileOutput[6]);
-		outputname= fileOutput[7];
+		startset = Integer.parseInt(fileOutput[2]);
+		targetset = Integer.parseInt(fileOutput[3]);
+		calcingactiv = Integer.parseInt(fileOutput[4]);
+		inputname = fileOutput[5];
+		outputname= fileOutput[6];
+		startX = Integer.parseInt(fileOutput[7]);
+		startY = Integer.parseInt(fileOutput[8]);
+		tagetX = Integer.parseInt(fileOutput[9]);
+		tagetY = Integer.parseInt(fileOutput[10]);
+		finallydone = Integer.parseInt(fileOutput[11]);
 		
 		File transferbuffer = new File("transferbuffer.tmp");
 		transferbuffer.delete();
