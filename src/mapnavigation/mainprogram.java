@@ -85,9 +85,12 @@ public class mainprogram {
 	public int test = 1;
 	public void run(){	
 		System.out.println("Point1");
-		gui.unstaticmain(null);
-		System.out.println("Point1.2");
 		System.out.println(gui.generateNewOutputname());
+		System.out.println("Point1.2");
+		gui.unstaticmain(null);
+		gui.setStatus("", 100, 100);
+//		System.exit(0);
+		
 		System.out.println("Point1.3");
 		gui.writetoFile();
 		System.out.println("Point1.5");
@@ -126,7 +129,7 @@ public class mainprogram {
 						System.out.println("Point5.5");
 						this.calcdistances();
 						System.out.println("Point5.75");
-						while(memorystartX == startX && memorystartY == startY){
+						while(inputfound == 2 && startset == 1 && memorystartX == startX && memorystartY == startY){
 							System.out.println("Point6");
 							if(targetset<1){
 								System.out.println("Point7");

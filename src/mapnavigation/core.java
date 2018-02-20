@@ -6,6 +6,8 @@
  */
 package mapnavigation;
 
+import java.io.File;
+
 public class core {
 ////Objects//////////////////////////////////////////
 	
@@ -32,8 +34,8 @@ public class core {
 	public void run() throws Exception {
 		System.out.println("Point0");
 		programm.run();
-//		ui1.create();					//User Interface erstellen
 	}
+	
 	
 //	public guiHandler getGui() {
 //		return gui;
