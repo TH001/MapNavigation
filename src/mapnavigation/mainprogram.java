@@ -87,6 +87,7 @@ public class mainprogram {
 		System.out.println("Point1");
 		System.out.println(gui.generateNewOutputname());
 		System.out.println("Point1.2");
+		
 		gui.unstaticmain(null);
 		gui.setStatus("", 100, 100);
 //		System.exit(0);

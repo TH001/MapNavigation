@@ -76,31 +76,47 @@ public class uifunction extends JFrame {
 					uifunction frame = new uifunction();
 					frame.setUndecorated(true);
 					frame.setVisible(true);
+					
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			}
 		});
 	}
+	int status;
 	public static void main(String[] args) {
 		uifunction frame = new uifunction();
 		frame.setUndecorated(true);
 		frame.setVisible(true);
-//		frame.setStatus("", 100, 100);
+		frame.setStatus("", 100, 100);
 //		EventQueue.invokeLater(new Runnable() {
 //			public void run() {
 //				try {
 //					uifunction frame = new uifunction();
 //					frame.setUndecorated(true);
 //					frame.setVisible(true);
-//					uifunction frame1 = new uifunction();
-//					frame1.setVisible(true);
+//					while(frame.status < 100) {
+//						int myStatus = frame.status;
+//						frame.progressBar.setValue(myStatus);
+//						Thread.sleep(1000);
+//					}
 //				} catch (Exception e) {
 //					e.printStackTrace();
 //				}
 //			}
 //		});
 	}
+	
+//	//methode soll alle 1s nach Status schauen und im Fenster aktualisieren
+//	public void updateStatus(mainprogram main) {
+//		try {
+//			this.setNewStatus(main.getStatus());
+//			Thread.sleep(1000);
+//		} catch (InterruptedException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//	}
 	
 	
 	// going to borrow code from a gist to move frame.
@@ -123,6 +139,7 @@ public class uifunction extends JFrame {
 				if(calcingactive == 0) {
 					calcingactive = 1;
 				}
+				
 				writetoFile();
 			}
 		});
@@ -470,6 +487,8 @@ public class uifunction extends JFrame {
 		contentPane.add(background);
 		background.setVerticalAlignment(SwingConstants.TOP);
 		background.setIcon(new ImageIcon(uifunction.class.getResource("/designe/imgsource/LogoWaterprint.png")));
+		
+		
 	}
 	
 	public void create() {
